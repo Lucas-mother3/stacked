@@ -340,34 +340,22 @@ drawbar(void)
 		return;
 	}
 
-	height = bh + nclients;
+	height = barHeight * nclients;
+	width = ww;
 	cc = wh / tabwidth;
 
 	if (nclients > cc)
 		cc = (ww - TEXTW(before) - TEXTW(after)) / tabwidth;
 
-	if ((fc = getfirsttab()) + cc < nclients) {
-		dc.w = TEXTW(after);
-		dc.x = width - dc.w;
-		drawtext(after, dc.sel);
-		width -= dc.w;
-		height -= dc.h;
-	}
-
 	dc.y = 0;
 	dc.x = 0;
-
-	if (fc > 0) {
-		dc.w = TEXTW(before);
-		drawtext(before, dc.sel);
-		dc.y += dc.h;
-		height -= dc.h;
-	}
 
 	cc = MIN(cc, nclients);
 
 	for (c = fc; c < fc + cc; c++) {
 		dc.h = height / nclients;
+		bh = barHeight * nclients;
+		dc.w = width;
 		if (c == sel) {
 			col = dc.sel;
 			dc.h += height % cc;
@@ -998,7 +986,7 @@ setup(void)
 	screen = DefaultScreen(dpy);
 	root = RootWindow(dpy, screen);
 	initfont(font);
-	bh = dc.h = dc.font.height + 2;
+	bh = dc.h = barHeight;
 
 	/* init atoms */
 	wmatom[WMDelete] = XInternAtom(dpy, "WM_DELETE_WINDOW", False);
